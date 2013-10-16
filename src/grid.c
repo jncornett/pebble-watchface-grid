@@ -28,20 +28,6 @@ typedef unsigned long ulong;
 const ushort CELL_SIZE_X = SCREEN_X / NUM_COLS;
 const ushort CELL_SIZE_Y = SCREEN_Y / NUM_ROWS;
 
-const char ENCRYPTED_CHARS[12][NUM_PERMUTATIONS] = {
-    {'o', '9', '@', 'C'},
-    {'[', 'i', '*', '/'},
-    {'S', '5', '?', '&'},
-    {'E', '8', 'B', '#'},
-    {'7', '^', '9', '+'},
-    {'S', '2', '6', '?'},
-    {'9', 'b', 'c', '<'},
-    {'/', '>', '1', '9'},
-    {'B', '&', '%', '$'},
-    {'6', 'q', '2', '-'},
-    {'^', '@', 'V', 'G'},
-    {'B', '9', 'T', '='}
-};
 
 const char ACTUAL_CHARS[12] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'P'};
 
@@ -57,6 +43,7 @@ Layer layer;
 static ushort tail_sizes[5];
 static ushort digit_values[5];
 static ushort step;
+static GFont app_font;
 
 /* Macros */
 
@@ -98,6 +85,8 @@ void layer_update_callback(Layer *me, GContext *ctx) {
     ushort tail_size;
     ushort digit_value;
     ushort col_max;
+    
+    app_font = FONT_MAIN;
     
     for (i = HR_1; i <= AP; i++) {
         tail_size = tail_sizes[i - OFFSET];
@@ -192,7 +181,7 @@ static void setup_layers(AppContextRef ctx) {
 static void grid_set_cell_char(GContext* ctx, GColor color, char c, ushort x, ushort y) {
     char buffer[2] = {c, '\0'};
     graphics_context_set_text_color(ctx, color);
-    graphics_text_draw(ctx, buffer, FONT_MAIN, CELL_RECT(x, y), GTextOverflowModeTrailingEllipsis, GTextAlignmentCenter, NULL);
+    graphics_text_draw(ctx, buffer, app_font, CELL_RECT(x, y), GTextOverflowModeTrailingEllipsis, GTextAlignmentCenter, NULL);
 }
 
 static void grid_set_cell_background(GContext* ctx, GColor color, ushort x, ushort y) {
